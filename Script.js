@@ -1,42 +1,5 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-  
-var allRelated = [];
-  var mogoTimeout;
-
-  function mogoRelated(json) {
-    var currentUrl = "<data:post.url.canonical/>".replace(/\/$/, "");
-    var entries = json.feed.entry || [];
-    
-    // 1. Saare labels se data collect karna
-    for (var i = 0; i < entries.length; i++) {
-      var entry = entries[i];
-      var url = (entry.link.find(function(l) { return l.rel === 'alternate'; }) || {}).href || '';
-      if (url && url.replace(/\/$/, "") !== currentUrl && !allRelated.some(function(r) { return r.url === url; })) {
-        allRelated.push({ title: entry.title.$t, url: url });
-      }
-    }
-    
-    // 2. Debounce lagana taaki saari requests poori hone ke baad ek hi baar render ho
-    clearTimeout(mogoTimeout);
-    mogoTimeout = setTimeout(renderRelatedTools, 200);
-  }
-
-  function renderRelatedTools() {
-    // 3. Array ko random mix (shuffle) karna taaki har baar same tools na dikhein
-    allRelated.sort(function() { return 0.5 - Math.random(); });
-
-    var html = '', count = 0, max = 4;
-    for (var j = 0; j < allRelated.length && count < max; j++) {
-      html += '<div style="border-left:3px solid #007bff; margin-top:5px; font-family: Inter; padding:9px 15px; background:#f9f9f9; border-radius:0 4px 4px 0; box-shadow:0 1px 3px rgba(0,0,0,0.05);">' +
-              '<h4 style="font-size:14px; margin:0; font-family: Inter; line-height:1.4;">' +
-              '<a href="' + allRelated[j].url + '" style="color:#333; text-decoration:none; font-weight:600; display:block;">' + allRelated[j].title + '</a>' +
-              '</h4></div>';
-      count++;
-    }
-    document.getElementById('related-posts-grid').innerHTML = html;
-  }
-  
   // --- Menu Logic Start ---
 
   const menuBtn = document.getElementById('mobile-menu-btn'); 
